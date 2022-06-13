@@ -46,6 +46,21 @@ npm run build
 npm test
 ```
 
+#### Deploy to Rinkeby
+
+```shell
+npx hardhat run scripts/deploy-library.ts --network rinkeby
+npx hardhat verify --network rinkeby DEPLOYED_CONTRACT_ADDRESS  "Constructor argument 1" "Constructor argument 1"
+```
+
+If you make changes that don't get picked up then add a clean into the process
+
+```shell
+npm run clean
+npm run build
+npm test
+
+
 ## Tools
 
 Setup and run instructions:
@@ -53,3 +68,4 @@ Setup and run instructions:
 - [Hardhat](./docs/tools/hardhat.md)
 - [PlantUML](./docs/tools/plantuml.md); UML diagram generation from code.
 - [Slither](./docs/tools/slither.md); Trail of Bits Solidity static analyzer.
+```

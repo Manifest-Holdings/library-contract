@@ -1,8 +1,11 @@
+import 'dotenv/config'
 import {task} from 'hardhat/config'
 import '@typechain/hardhat'
 import '@nomiclabs/hardhat-ethers'
+import '@nomiclabs/hardhat-etherscan'
 import '@openzeppelin/hardhat-upgrades'
 import '@nomiclabs/hardhat-waffle'
+import 'hardhat-gas-reporter'
 import {log} from './config/logging'
 
 /*
@@ -42,6 +45,46 @@ export default {
             chainId: 33133,
             allowUnlimitedContractSize: false,
             loggingEnabled: true
+        },
+        goerli: {
+            url: process.env.GOERLI_URL || '',
+            accounts:
+                typeof process.env.GOERLI_PRIVATE_KEY === 'undefined'
+                    ? []
+                    : [`0x${process.env.GOERLI_PRIVATE_KEY}`]
+        },
+        rinkeby: {
+            url: process.env.RINKEBY_URL || '',
+            accounts:
+                typeof process.env.RINKEBY_PRIVATE_KEY === 'undefined'
+                    ? []
+                    : [`0x${process.env.RINKEBY_PRIVATE_KEY}`],
+            gas: 30000000
+        },
+        mainnet: {
+            url: process.env.MAINNET_URL || '',
+            accounts:
+                typeof process.env.MAINNET_PRIVATE_KEY === 'undefined'
+                    ? []
+                    : [`0x${process.env.MAINNET_PRIVATE_KEY}`]
+            /*
+             * gasPrice: 45000000000, // 45 Gwei
+             * gasLimit: 223527,
+             */
+        },
+        mumbai: {
+            url: process.env.MUMBAI_URL || '',
+            accounts:
+                typeof process.env.MUMBAI_PRIVATE_KEY === 'undefined'
+                    ? []
+                    : [`0x${process.env.MUMBAI_PRIVATE_KEY}`]
+        },
+        matic: {
+            url: process.env.MATIC_URL || '',
+            accounts:
+                typeof process.env.MATIC_PRIVATE_KEY === 'undefined'
+                    ? []
+                    : [`0x${process.env.MATIC_PRIVATE_KEY}`]
         }
     },
     solidity: {
@@ -57,7 +100,22 @@ export default {
             },
             {
                 version: '0.8.4'
+            },
+            {
+                version: '0.8.2'
+            },
+            {
+                version: '0.8.8'
             }
         ]
+    },
+    gasReporter: {
+        enabled: true,
+        currency: 'USD',
+        gasPrice: 45,
+        coinmarketcap: process.env.COINMARKETCAP_API_KEY
+    },
+    etherscan: {
+        apiKey: process.env.ETHERSCAN_API_KEY
     }
 }
