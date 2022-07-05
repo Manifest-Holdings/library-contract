@@ -26,12 +26,17 @@ contract Library is Initializable, UUPSUpgradeable {
         string author,
         address authorWallet,
         string content,
-        string[] tags
+        Tag[] tags
     );
     event Revoke(bytes id);
 
     error NoPublishAccess();
     error NotOwner();
+
+    struct Tag {
+        string key;
+        string value;
+    }
 
     function initialize(address owner_, address writePassContract_)
         public
@@ -49,7 +54,7 @@ contract Library is Initializable, UUPSUpgradeable {
         string memory author,
         address authorWallet,
         string memory content,
-        string[] memory tags
+        Tag[] memory tags
     ) public onlyValidPublishAccess {
         // records a topic
         // if a topic is re-recorded it should be treated as an edit or update
