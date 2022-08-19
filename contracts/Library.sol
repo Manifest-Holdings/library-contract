@@ -18,7 +18,7 @@ interface IERC721 {
 
 contract Library is Initializable, UUPSUpgradeable {
     address public owner;
-    address public writePassContract;
+    address[] public writePassContracts;
     address[] private _publishers;
 
     event Record(
@@ -38,15 +38,11 @@ contract Library is Initializable, UUPSUpgradeable {
         string value;
     }
 
-    function initialize(address owner_, address writePassContract_)
-        public
-        initializer
-    {
+    function initialize(address owner_) public initializer {
         __UUPSUpgradeable_init();
 
         owner = owner_;
         addPublisher(owner_);
-        writePassContract = writePassContract_;
     }
 
     function record(
@@ -71,7 +67,7 @@ contract Library is Initializable, UUPSUpgradeable {
         _publishers.push(newPublisher);
     }
 
-    function getPublishers() public view returns (address[] memory publishers) {
+    function getPublishers() public view returns (address[] memory) {
         // returns the list of publishers
         return _publishers;
     }
@@ -81,12 +77,19 @@ contract Library is Initializable, UUPSUpgradeable {
         delete _publishers[i];
     }
 
-    function setWritePassContract(address newWritePassContract)
-        public
-        onlyOwner
-    {
-        // sets the address of the write pass contract
-        writePassContract = newWritePassContract;
+    function addNFTWhitelist(address newNFT) public onlyOwner {
+        // adds a publisher to the list of publishers
+        writePassContracts.push(newNFT);
+    }
+
+    function getNFTWhitelist() public view returns (address[] memory) {
+        // returns the list of publishers
+        return writePassContracts;
+    }
+
+    function removeNFTWhitelist(uint256 i) public onlyOwner {
+        // removes a publisher from the list of publishers
+        delete writePassContracts[i];
     }
 
     function hasValidPublishAccess() public view returns (bool) {
@@ -121,17 +124,13 @@ contract Library is Initializable, UUPSUpgradeable {
     }
 
     function _hasWritePass() private view returns (bool) {
-        if (writePassContract != address(0x0)) {
-            IERC721 writePass = IERC721(writePassContract);
-            // checks if the sender owns a write pass contract NFT
+        for (uint256 i = 0; i < writePassContracts.length; i++) {
+            IERC721 writePass = IERC721(writePassContracts[i]);
             if (writePass.balanceOf(msg.sender) > 0) {
                 return true;
-            } else {
-                return false;
             }
-        } else {
-            return false;
         }
+        return false;
     }
 
     function _authorizeUpgrade(address) internal override onlyOwner {}

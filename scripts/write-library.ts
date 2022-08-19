@@ -40,7 +40,16 @@ async function main() {
         'Andrew Gould & Conway Anderson',
         '0x0000000000000000000000000000000000000000',
         midSizeContent,
-        []
+        [
+            {
+                key: 'coverArt',
+                value: 'https://divineeye.xyz/images/default_coverart.jpg'
+            },
+            {
+                key: 'storyArt',
+                value: 'https://divineeye.xyz/images/default_storyart.jpg'
+            }
+        ]
     )
 
     console.log('Success with ', library.address)
