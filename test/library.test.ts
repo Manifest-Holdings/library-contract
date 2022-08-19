@@ -178,6 +178,9 @@ describe('Library', () => {
         beforeEach(async () => {
             writePass = await deployContract<WritePassMock>('WritePassMock')
             await writePass.connect(observer2).mint()
+
+            writePass2 = await deployContract<WritePassMock>('WritePassMock')
+            await writePass2.connect(observer).mint()
         })
 
         it('add NFT address', async () => {
@@ -197,8 +200,9 @@ describe('Library', () => {
 
         it('has whitelisted NFT, can record', async () => {
             await library.addNFTWhitelist(writePass.address)
+            await library.addNFTWhitelist(writePass2.address)
             const tx = await library
-                .connect(observer2)
+                .connect(observer)
                 .record('test', 'test', observer.address, 'test', tagArray)
             const receipt = await tx.wait()
             if (receipt.events) {
@@ -249,55 +253,6 @@ describe('Library', () => {
                     .record('test', 'test', observer.address, 'test', tagArray)
             ).to.revertedWith('NoPublishAccess()')
         })
-
-        /*
-         * it('with NFT can record', async () => {
-         *     const tx = await library
-         *         .connect(observer2)
-         *         .record('test', 'test', observer2.address, 'test', tagArray)
-         *     const receipt = await tx.wait()
-         *     if (receipt.events) {
-         *         expect(receipt.events[0].args?.title).to.equal('test')
-         *         expect(receipt.events[0].args?.author).to.equal('test')
-         *         expect(receipt.events[0].args?.authorWallet).to.equal(
-         *             observer2.address
-         *         )
-         *         expect(receipt.events[0].args?.content).to.equal('test')
-         *         expect(receipt.events[0].args?.tags[0].key).to.equal(
-         *             tagArray[0].key
-         *         )
-         *         expect(receipt.events[0].args?.tags[0].value).to.equal(
-         *             tagArray[0].value
-         *         )
-         *         expect(receipt.events[0].args?.tags[1].key).to.equal(
-         *             tagArray[1].key
-         *         )
-         *         expect(receipt.events[0].args?.tags[1].value).to.equal(
-         *             tagArray[1].value
-         *         )
-         *     }
-         * })
-         */
-
-        /*
-         * it('with NFT can revoke', async () => {
-         *     await expect(
-         *         library
-         *             .connect(observer2)
-         *             .revoke('0x0000000000000000000000000000000000000000')
-         *     ).to.emit(library, 'Revoke')
-         * })
-         */
-
-        /*
-         * it('without NFT can not record', async () => {
-         *     await expect(
-         *         library
-         *             .connect(observer)
-         *             .record('test', 'test', observer.address, 'test', tagArray)
-         *     ).to.revertedWith('NoPublishAccess()')
-         * })
-         */
     })
 
     let admin: SignerWithAddress
@@ -307,5 +262,6 @@ describe('Library', () => {
     let library: Library
     let libraryV2: LibraryV2
     let writePass: WritePassMock
+    let writePass2: WritePassMock
     let tagArray: Array<Tag>
 })
