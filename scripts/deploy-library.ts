@@ -25,11 +25,9 @@ async function main() {
 
     // We get the contract to deploy
     const Library = await ethers.getContractFactory('Library')
-    const library = await upgrades.deployProxy(
-        Library,
-        [deployer.address, '0x0000000000000000000000000000000000000000'],
-        {kind: 'uups'}
-    )
+    const library = await upgrades.deployProxy(Library, [deployer.address], {
+        kind: 'uups'
+    })
     console.log('SAVE THIS - Library deployed to:', library.address)
 }
 
