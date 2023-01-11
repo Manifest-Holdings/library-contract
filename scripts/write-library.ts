@@ -30,27 +30,40 @@ async function main() {
     // We get the contract to deploy
     const Library = await ethers.getContractFactory('Library')
     const library = Library.attach(libraryAddress)
+    await library.revoke(
+        '0xb3d5eaa9d5471458a91914a82c0fde870157618787a4c63eabb8d43ebe96eb87'
+    )
+
     /*
-     * await library.revoke(
-     *     '0x6b8239ebe17d31bad73d083b8a34fa2c254d5b4156b940ca7fd8788451ddffb7'
+     * await library.record(
+     *     'Divine City: Prologue Teaser',
+     *     'Andrew Gould & Conway Anderson',
+     *     '0x0000000000000000000000000000000000000000',
+     *     midSizeContent,
+     *     [
+     *         {
+     *             key: 'coverart',
+     *             value: 'https://divineeye.xyz/images/default_coverart.jpg'
+     *         },
+     *         {
+     *             key: 'storyart',
+     *             value: 'https://divineeye.xyz/images/default_storyart.jpg'
+     *         },
+     *         {
+     *             key: 'world',
+     *             value: 'Lootverse'
+     *         },
+     *         {
+     *             key: 'license',
+     *             value: 'CC0'
+     *         },
+     *         {
+     *             key: 'reference',
+     *             value: 'NFT||0x0000000000000000000000000000000000000000||323'
+     *         }
+     *     ]
      * )
      */
-    await library.record(
-        'Divine City: Prologue Teaser',
-        'Andrew Gould & Conway Anderson',
-        '0x0000000000000000000000000000000000000000',
-        midSizeContent,
-        [
-            {
-                key: 'coverArt',
-                value: 'https://divineeye.xyz/images/default_coverart.jpg'
-            },
-            {
-                key: 'storyArt',
-                value: 'https://divineeye.xyz/images/default_storyart.jpg'
-            }
-        ]
-    )
 
     console.log('Success with ', library.address)
 }
