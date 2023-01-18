@@ -15,7 +15,7 @@ async function main() {
         case 'hardhat':
         case 'localhost':
             break
-        case 'rinkeby':
+        case 'goerli':
             break
         case 'mainnet':
             break

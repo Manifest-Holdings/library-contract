@@ -6,7 +6,7 @@ import {log} from '../config/logging'
 async function main() {
     await run('compile')
 
-    const [deployer] = await ethers.getSigners()
+    const [deployer, wallet1] = await ethers.getSigners()
     console.log('Deploying contracts with the account:', deployer.address)
     console.log('Account balance:', (await deployer.getBalance()).toString())
     console.log('Network: ', network.name)
@@ -17,11 +17,11 @@ async function main() {
         case 'localhost':
             libraryAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
             break
-        case 'rinkeby':
-            libraryAddress = ''
+        case 'goerli':
+            libraryAddress = '0x778386a3bce9D1DD217Bae91088e1Bd95fbA61f9'
             break
         case 'mainnet':
-            libraryAddress = ''
+            libraryAddress = '0x1B0d65fF9cF70d65708295C23b41b6B2dC99623c'
             break
         default:
             throw new Error(`Unknown network: ${network.name}`)
@@ -30,11 +30,9 @@ async function main() {
     // We get the contract to deploy
     const Library = await ethers.getContractFactory('Library')
     const library = Library.attach(libraryAddress)
-    /*
-     * await library.revoke(
-     *     '0x6b8239ebe17d31bad73d083b8a34fa2c254d5b4156b940ca7fd8788451ddffb7'
-     * )
-     */
+
+    // await library.addPublisher(wallet1.address)
+
     await library.record(
         'Divine City: Prologue Teaser',
         'Andrew Gould & Conway Anderson',
@@ -51,6 +49,37 @@ async function main() {
             }
         ]
     )
+
+    /*
+     * await library
+     *     .connect(deployer)
+     *     .revoke(
+     *         '0x655536c709ad32abe88e43f446127fc70e19a0fa200c4c3d59b878aacecc9255'
+     *     )
+     */
+
+    /*
+     * await library.record(
+     *     'Divine City: Prologue Teaser',
+     *     'Andrew Gould & Conway Anderson',
+     *     '0x0000000000000000000000000000000000000000',
+     *     midSizeContent,
+     *     [
+     *         {
+     *             key: 'entryID',
+     *             value: '0x655536c709ad32abe88e43f446127fc70e19a0fa200c4c3d59b878aacecc9255'
+     *         },
+     *         {
+     *             key: 'coverart',
+     *             value: 'https://divineeye.xyz/images/default_coverart.jpg'
+     *         },
+     *         {
+     *             key: 'storyart',
+     *             value: 'https://divineeye.xyz/images/default_storyart.jpg'
+     *         }
+     *     ]
+     * )
+     */
 
     console.log('Success with ', library.address)
 }
